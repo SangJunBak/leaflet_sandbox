@@ -6,6 +6,6 @@ Uses antd, create-react-app, react-rewired scss, leaflet, react-redux, yarn, and
 Comes with preset antd advanced configuration for importing. 
 <br/>
 <br/>
-Starts off with a Dashboard template, a route to it, no reducers, and a console log saga.
+Starts off with a DashboardView template, a route to it, no reducers, and a console log saga.
 ### Installation
 Uses yarn.

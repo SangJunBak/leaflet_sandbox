@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { Redirect, BrowserRouter as Router, Route, Switch} from 'react-router-dom'
 import { Provider } from 'react-redux'
 
 import store from './core/store';
 
-import Dashboard from './components/views/Dashboard';
+import DashboardView from './components/dashboard/DashboardView';
 
 import './App.scss';
 
@@ -13,7 +13,9 @@ class App extends Component {
     return (
         <Provider store = {store}>
             <Router>
-                <Route path="/" component = {Dashboard}/>
+                <Switch>
+                    <Route path="/" component = {DashboardView}/>
+                </Switch>
             </Router>
         </Provider>
     )
