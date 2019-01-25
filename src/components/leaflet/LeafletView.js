@@ -13,16 +13,36 @@ class LeafletView extends Component {
     constructor(props){
         super(props);
         this.state = {
-          mapId: 'baseMap'
+            mapId: 'baseMap',
+            markers: [],
+            circles: [],
+            polygons: []
         };
 
         this.createMap = this.createMap.bind(this);
         this.addTileLayer = this.addTileLayer.bind(this);
+        this.addMarker = this.addMarker.bind(this);
+        this.addCircle = this.addCircle.bind(this);
+        this.addPolygon = this.addPolygon.bind(this);
+        this.onMapClick = this.onMapClick.bind(this);
+    }
+
+    componentDidMount() {
+        this.map =  this.createMap();
+        this.map.setView([51.505, -0.09], 13);
+        this.map.on('click', this.onMapClick);
+        this.addTileLayer();
+        this.addMarker();
+        this.addCircle([51.508, -0.11], 'red');
+        this.addPolygon();
+
     }
 
     createMap() {
         return L.map(this.state.mapId);
     }
+
+
 
     addTileLayer() {
         L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
@@ -33,16 +53,53 @@ class LeafletView extends Component {
         }).addTo(this.map);
     }
 
-    componentDidMount() {
-        this.map =  L.map(this.state.mapId);
-        this.map.setView([51.505, -0.09], 13);
-        this.addTileLayer();
+    addMarker(){
+        const marker = L.marker([51.5, -0.09], {
+            draggable: true
+        }).addTo(this.map);
+    }
+
+    addCircle(latlng, color){
+        const circle = L.circle(latlng, {
+            color: color,
+            fillColor: color,
+            fillOpacity: 0.5,
+            radius: 500
+        });
+
+        const newCircles = [...this.state.circles, circle];
+        this.setState({circles: newCircles});
+
 
     }
 
+    addPolygon(){
+        L.polygon([
+            [51.509, -0.08],
+            [51.503, -0.06],
+            [51.51, -0.047]
+        ]).addTo(this.map);
+    }
+
+    onMapClick(e) {
+        L.popup()
+            .setLatLng(e.latlng)
+            .setContent("You clicked the map at " + e.latlng.toString())
+            .openOn(this.map);
+    }
+
     render() {
+        console.log(this.state);
+        const renderCircles = this.state.circles.forEach((circle) => {
+            circle.addTo(this.map);
+        });
+
         return (
-            <div id = {this.state.mapId} style = {styles.container}>
+            <div>
+                <div id = {this.state.mapId} style = {styles.container}>
+                    {renderCircles}
+                </div>
+                <input type="button" onClick={() => this.addCircle([51.509, -0.12], 'blue')} value="Create Blue Circle"/>
             </div>
         );
     }
